@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
+#include "NRF_Driver/NRF24.h"
 #include "Tasks/default_task.h"
 #include "Tasks/hid_task.h"
 #include "Tasks/nrf_task.h"
