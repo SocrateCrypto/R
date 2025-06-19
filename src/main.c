@@ -19,7 +19,14 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
-
+#include "Tasks/default_task.h"
+#include "Tasks/hid_task.h"
+#include "Tasks/nrf_task.h"
+#include "Tasks/state_machine_task.h"
+#include "stm32f1xx_hal.h"
+#include "FreeRTOS.h"
+#include "task.h"
+#include <stdio.h>
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -41,6 +48,7 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+
 ADC_HandleTypeDef hadc1;
 
 I2C_HandleTypeDef hi2c1;
@@ -94,10 +102,6 @@ static void MX_USART3_UART_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_SPI2_Init(void);
-void StartDefaultTask(void *argument);
-void HidTaskFnc(void *argument);
-void NrfTaskFnc(void *argument);
-void StartStateMachine(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -105,6 +109,12 @@ void StartStateMachine(void *argument);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+int __io_putchar(int ch)
+{
+    HAL_UART_Transmit(&huart1, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
+    return ch;
+}
 
 /* USER CODE END 0 */
 
@@ -178,7 +188,7 @@ int main(void)
   NrfTaskHandle = osThreadNew(NrfTaskFnc, NULL, &NrfTask_attributes);
 
   /* creation of StateMachineTas */
-  StateMachineTasHandle = osThreadNew(StartStateMachine, NULL, &StateMachineTas_attributes);
+  StateMachineTasHandle = osThreadNew(StateMachineTask, NULL, &StateMachineTas_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -552,78 +562,6 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 
 /* USER CODE END 4 */
-
-/* USER CODE BEGIN Header_StartDefaultTask */
-/**
-  * @brief  Function implementing the defaultTask thread.
-  * @param  argument: Not used
-  * @retval None
-  */
-/* USER CODE END Header_StartDefaultTask */
-void StartDefaultTask(void *argument)
-{
-  /* USER CODE BEGIN 5 */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END 5 */
-}
-
-/* USER CODE BEGIN Header_HidTaskFnc */
-/**
-* @brief Function implementing the HidTask thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_HidTaskFnc */
-void HidTaskFnc(void *argument)
-{
-  /* USER CODE BEGIN HidTaskFnc */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END HidTaskFnc */
-}
-
-/* USER CODE BEGIN Header_NrfTaskFnc */
-/**
-* @brief Function implementing the NrfTask thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_NrfTaskFnc */
-void NrfTaskFnc(void *argument)
-{
-  /* USER CODE BEGIN NrfTaskFnc */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END NrfTaskFnc */
-}
-
-/* USER CODE BEGIN Header_StartStateMachine */
-/**
-* @brief Function implementing the StateMachineTas thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_StartStateMachine */
-void StartStateMachine(void *argument)
-{
-  /* USER CODE BEGIN StartStateMachine */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END StartStateMachine */
-}
 
 /**
   * @brief  Period elapsed callback in non blocking mode
